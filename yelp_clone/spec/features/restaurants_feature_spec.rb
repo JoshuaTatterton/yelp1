@@ -34,6 +34,15 @@ feature 'restaurants' do
         expect(page).not_to have_css 'h2', text: 'kf'
         expect(page).to have_content 'error'
       end
+      it "does not let you submit a name that has been used" do
+        Restaurant.create(name: "Moe's Tavern")
+        visit '/restaurants'
+        click_link 'Add a restaurant'
+        fill_in 'Name', with: "Moe's Tavern"
+        click_button 'Create Restaurant'
+        expect(page).not_to have_css 'h2', text: "Moe's Tavern"
+        expect(page).to have_content 'error'
+      end
     end
   end
   context 'viewing restaurants' do
